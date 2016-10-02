@@ -1,0 +1,23 @@
+{
+  "name": "docshot",
+  "version": "1.0.0",
+  "description": "html screenshot microservice",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frolicking-tuba/docshot.git"
+  },
+  "author": "mason clayton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frolicking-tuba/docshot/issues"
+  },
+  "homepage": "https://github.com/frolicking-tuba/docshot#readme",
+  "dependencies": {
+    "redis": "^2.6.2"
+  }
+}
