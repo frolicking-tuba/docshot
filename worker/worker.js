@@ -3,6 +3,7 @@ const done = require('../util/queue')('done');
 const Job = require('../util/job');
 const http = require('http');
 const phantom = require('phantom');
+const request = require('request');
 
 class JobRunner {
   constructor(job) {
@@ -100,9 +101,27 @@ class JobRunner {
   }
 
   httpReq(req, res) {
-    console.log('(worker): recieved http request', req.method, 'to', req.url);
-    res.write(this.job.html);
-    res.end();
+    if (req.url === '/') {
+      res.write(this.job.html);
+      res.end();
+
+      return;
+    }
+
+    console.log(
+      '(worker): proxying url',
+      req.url,
+      '->',
+      this.job.url + req.url);
+
+    request(this.job.url + req.url, (err, proxRes, proxBody) => {
+      if (err) {
+        console.log('(worker): proxying error', err);
+      }
+
+      res.writeHead(proxRes.statusCode, proxRes.headers);
+      res.end(proxBody);
+    });
   }
 
   startHttpServer() {

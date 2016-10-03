@@ -37,12 +37,12 @@ function takeShot(x, y, w, h) {
 }
 
 document.addEventListener('mousedown', (event) => {
+  event.preventDefault();
+
   let xPos = 0;
   let yPos = 0;
   let width = 0;
   let height = 0;
-
-  event.preventDefault();
 
   const selection = document.createElement('div');
 

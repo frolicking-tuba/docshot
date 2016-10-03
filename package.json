@@ -20,8 +20,11 @@
   },
   "homepage": "https://github.com/frolicking-tuba/docshot#readme",
   "dependencies": {
+    "aws-sdk": "^2.6.6",
+    "http-proxy": "^1.15.1",
     "node-phantom": "^0.2.5",
     "phantom": "^2.1.21",
-    "redis": "^2.6.2"
+    "redis": "^2.6.2",
+    "request": "^2.75.0"
   }
 }
