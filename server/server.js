@@ -1,9 +1,11 @@
-const pending = require('./queue')('pending');
-const done = require('./queue')('done');
+const pending = require('../util/queue')('pending');
+const done = require('../util/queue')('done');
 const http = require('http');
-const Job = require('./job');
+const Job = require('../util/job');
 
-const PORT = 3000;
+done.onPop((job) => {
+  console.log(job);
+});
 
 const handleReq = (req, res) => {
   let data = '';
@@ -18,5 +20,7 @@ const handleReq = (req, res) => {
 };
 
 const server = http.createServer(handleReq);
+
+const PORT = 3000;
 
 server.listen(PORT);

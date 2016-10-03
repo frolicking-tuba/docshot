@@ -1,19 +1,9 @@
-phantom.page.onError = function(msg, trace){
-  console.log(msg);
-  trace.forEach(function(item){
-    console.log(item);
-  });
-};
+const pending = require('../util/queue')('pending');
+const done = require('../util/queue')('done');
+const Job = require('../util/job');
 
-//const pending = require('./queue')('pending');
-//const done = require('./queue')('done');
-//const Job = require('./job');
+pending.onPop((result) => {
+  const job = new Job(result);
 
-console.log('here');
-
-//pending.onPop((result) => {
-  //const job = new Job(result);
-
-  //console.log(job.url);
-  //console.log(job.html.length);
-//});
+  done.push(job.serialize());
+});
