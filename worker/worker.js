@@ -52,8 +52,16 @@ class JobRunner {
       })
       .then((status) => {
         console.log('(worker): opened page', status);
-        phantomPage.render('test.png');
+        console.log('(worker): rendering to baset64 PNG');
 
+        return phantomPage.renderBase64('PNG');
+      })
+      .then((imageData) => {
+        console.log('(worker): done rendering');
+
+        this.job.setImage(imageData);
+
+        console.log('(worker): shutting down phantom');
         this.phantom.exit();
         this.onDone();
       })
@@ -63,8 +71,8 @@ class JobRunner {
   }
 
   httpReq(req, res) {
-    console.log('(worker): recieved http request');
-    console.log(req.method);
+    console.log('(worker): recieved http request', req.method, 'to', req.url);
+    res.write(this.job.html);
     res.end();
   }
 

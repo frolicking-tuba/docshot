@@ -8,7 +8,7 @@ module.exports = (listName) => {
     if (err) {
       console.log(err);
     } else {
-      popCallback(JSON.parse(value[1]));
+      popCallback(value[1]);
     }
 
     startPopping();
@@ -20,7 +20,7 @@ module.exports = (listName) => {
 
   return {
     push(value) {
-      connection.lpush(listName, JSON.stringify(value));
+      connection.lpush(listName, value);
     },
     onPop(callback) {
       popCallback = callback;

@@ -3,8 +3,11 @@ const done = require('../util/queue')('done');
 const http = require('http');
 const Job = require('../util/job');
 
-done.onPop((job) => {
-  console.log('(server): recieved job done ', job);
+done.onPop((result) => {
+  const job = new Job(result);
+
+  console.log('(server): recieved job done ', job.url);
+  console.log('(server): image size: ', job.image.length);
 });
 
 function handleReq(req, res) {
