@@ -77,8 +77,8 @@ class JobRunner {
       .then(() => {
         console.log('(worker): phantom opening url');
 
-        //return phantomPage.open(`http://localhost:${this.serverPort}`);
-        return phantomPage.open(this.job.url);
+        return phantomPage.open(`http://localhost:${this.serverPort}`);
+        //return phantomPage.open(this.job.url);
       })
       .then(() => {
         console.log('(worker): rendering to baset64 PNG');
