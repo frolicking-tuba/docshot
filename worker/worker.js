@@ -4,6 +4,7 @@ const Job = require('../util/job');
 const http = require('http');
 const phantom = require('phantom');
 const request = require('request');
+const urlParse = require('url').parse;
 
 class JobRunner {
   constructor(job) {
@@ -79,7 +80,6 @@ class JobRunner {
         console.log('(worker): phantom opening url');
 
         return phantomPage.open(`http://localhost:${this.serverPort}`);
-        //return phantomPage.open(this.job.url);
       })
       .then(() => {
         console.log('(worker): rendering to baset64 PNG');
@@ -100,6 +100,15 @@ class JobRunner {
       });
   }
 
+  getResourceUrl(sourceUrl) {
+    if (sourceUrl[0] === '/') {
+      const parsedJob = urlParse(this.job.url);
+      return `${parsedJob.protocol}//${parsedJob.hostname}${sourceUrl}`
+    }
+
+    return this.job.url + sourceUrl;
+  }
+
   httpReq(req, res) {
     if (req.url === '/') {
       res.write(this.job.html);
@@ -107,14 +116,12 @@ class JobRunner {
 
       return;
     }
+    
+    const toUrl = this.getResourceUrl(req.url);
 
-    console.log(
-      '(worker): proxying url',
-      req.url,
-      '->',
-      this.job.url + req.url);
+    console.log('(worker): proxying url', req.url, '->', toUrl);
 
-    request(this.job.url + req.url, (err, proxRes, proxBody) => {
+    request(toUrl, (err, proxRes, proxBody) => {
       if (err) {
         console.log('(worker): proxying error', err);
       }
