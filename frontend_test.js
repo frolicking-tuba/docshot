@@ -1,6 +1,6 @@
 function takeShot(x, y, w, h) {
   const shotData = {
-    html: document.documentElement.outerHTML,
+    html: document.documentElement.innerHTML,
     browserWidth: window.innerWidth,
     browserHeight: window.innerHeight,
     url: location.href,
@@ -23,7 +23,7 @@ function takeShot(x, y, w, h) {
     .then((response) => {
       const image = document.createElement('img');
 
-      image.src = `data:image/png;base64,${response}`;
+      image.src = response;
       image.style.position = 'absolute';
       image.style.top = `${shotData.clipY}px`;
       image.style.left = `${shotData.clipX}px`;
