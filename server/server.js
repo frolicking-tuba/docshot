@@ -4,10 +4,10 @@ const http = require('http');
 const Job = require('../util/job');
 
 done.onPop((job) => {
-  console.log(job);
+  console.log('(server): recieved job done ', job);
 });
 
-const handleReq = (req, res) => {
+function handleReq(req, res) {
   let data = '';
 
   req.on('data', (part) => (data += part));
@@ -17,7 +17,7 @@ const handleReq = (req, res) => {
 
     pending.push(job.serialize());
   });
-};
+}
 
 const server = http.createServer(handleReq);
 

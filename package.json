@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/frolicking-tuba/docshot#readme",
   "dependencies": {
+    "node-phantom": "^0.2.5",
+    "phantom": "^2.1.21",
     "redis": "^2.6.2"
   }
 }
