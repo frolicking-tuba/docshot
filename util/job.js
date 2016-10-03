@@ -5,6 +5,7 @@ class Job {
     } else {
       this.url = first;
       this.html = rest[0];
+      this.id = rest[1];
     }
   }
 
@@ -12,7 +13,8 @@ class Job {
     return JSON.stringify({
       url: this.url || null,
       html: this.html || null,
-      image: this.image || null
+      image: this.image || null,
+      id: this.id || null
     });
   }
 
@@ -22,6 +24,7 @@ class Job {
     this.url = parsed.url || null;
     this.html = parsed.html || null;
     this.image = parsed.image || null;
+    this.id = parsed.id || 0;
   }
 
   setImage(image) {
