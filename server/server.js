@@ -3,7 +3,8 @@ const done = require('../util/queue')('done');
 const http = require('http');
 const Job = require('../util/job');
 
-const openRes = [];
+let curId = 0;
+const openRes = { };
 
 done.onPop((result) => {
   const job = new Job(result);
@@ -13,7 +14,7 @@ done.onPop((result) => {
 
   const res = openRes[job.id];
 
-  openRes.splice(job.id, 1);
+  delete openRes[job.id];
 
   console.log('(server): replying with image data... ', openRes.length);
   res.write(job.image);
@@ -27,9 +28,12 @@ const handleReq = (req, res) => {
   req.on('end', () => {
     const job = new Job(
       data,
-      openRes.length);
+      curId);
 
-    openRes.push(res);
+    openRes[curId] = res;
+
+    curId++;
+
     pending.push(job.serialize());
   });
 };

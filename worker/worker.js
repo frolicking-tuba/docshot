@@ -46,17 +46,39 @@ class JobRunner {
       .then((page) => {
         phantomPage = page;
 
-        phantomPage.property('viewportSize', {
+        console.log(
+          '(worker): adjusting viewport size to',
+          this.job.browserWidth,
+          this.job.browserHeight);
+
+        return phantomPage.property('viewportSize', {
           width: this.job.browserWidth,
           height: this.job.browserHeight
         });
-
-        console.log('(worker): phantom opening url');
-
-        return phantomPage.open(`http://localhost:${this.serverPort}`);
       })
       .then((status) => {
         console.log('(worker): opened page', status);
+        console.log(
+          '(worker): adjusting viewport clipping to',
+          this.job.clipX,
+          this.job.clipY,
+          this.job.clipWidth,
+          this.job.clipHeight);
+
+        return phantomPage.property('clipRect', {
+          left: this.job.clipX,
+          top: this.job.clipY,
+          width: this.job.clipWidth,
+          height: this.job.clipHeight
+        });
+      })
+      .then(() => {
+        console.log('(worker): phantom opening url');
+
+        //return phantomPage.open(`http://localhost:${this.serverPort}`);
+        return phantomPage.open(this.job.url);
+      })
+      .then(() => {
         console.log('(worker): rendering to baset64 PNG');
 
         return phantomPage.renderBase64('PNG');
