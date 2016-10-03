@@ -29,8 +29,7 @@ function takeShot(x, y, w, h) {
       image.style.left = `${shotData.clipX}px`;
       image.style.width = 'auto';
       image.style.height = 'auto';
-      image.style.zindex = 999999;
-      //image.style.opacity = '.5';
+      image.style['z-index'] = 999999;
       image.style.background = '#ffffff';
 
       document.body.appendChild(image);
