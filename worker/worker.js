@@ -28,7 +28,10 @@ class JobRunner {
   launchPhantom() {
     console.log('(worker): launching phantomjs');
 
-    phantom.create()
+    phantom.create([
+        '--ignore-ssl-errors=yes',
+        '--web-security=false'
+      ])
       .then((phantomInstance) => {
         console.log('(worker): phantom is ready to go!');
         this.phantom = phantomInstance;
@@ -79,7 +82,14 @@ class JobRunner {
       .then(() => {
         console.log('(worker): phantom opening url');
 
-        return phantomPage.open(`http://localhost:${this.serverPort}`);
+        return phantomPage.open(this.job.url);
+      })
+      .then(() =>  {
+        console.log('(worker): setting innerHTML in phantom');
+
+        return phantomPage.evaluate(function(html){
+          document.documentElement.innerHTML = html;
+        }, this.job.html);
       })
       .then(() => {
         console.log('(worker): rendering to baset64 PNG');
