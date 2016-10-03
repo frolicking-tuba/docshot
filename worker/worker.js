@@ -44,11 +44,16 @@ class JobRunner {
 
     this.phantom.createPage()
       .then((page) => {
-        console.log('(worker): phantom opening url');
-
         phantomPage = page;
 
-        return page.open(`http://localhost:${this.serverPort}`);
+        phantomPage.property('viewportSize', {
+          width: this.job.browserWidth,
+          height: this.job.browserHeight
+        });
+
+        console.log('(worker): phantom opening url');
+
+        return phantomPage.open(`http://localhost:${this.serverPort}`);
       })
       .then((status) => {
         console.log('(worker): opened page', status);

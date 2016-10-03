@@ -26,7 +26,6 @@ const handleReq = (req, res) => {
   req.on('data', (part) => (data += part));
   req.on('end', () => {
     const job = new Job(
-      'https://www.google.com',
       data,
       openRes.length);
 
