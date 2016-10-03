@@ -72,6 +72,8 @@ class JobRunner {
           height: this.job.clipHeight
         });
       })
+      .then(() =>
+        phantomPage.setting('userAgent', this.job.userAgent))
       .then(() => {
         console.log('(worker): phantom opening url');
 

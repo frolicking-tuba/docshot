@@ -7,10 +7,11 @@ function takeShot(x, y, w, h) {
     clipX: x || window.scrollX,
     clipY: y || window.scrollY,
     clipWidth: w || window.innerWidth,
-    clipHeight: h || window.innerHeight
+    clipHeight: h || window.innerHeight,
+    userAgent: navigator.userAgent
   };
 
-  const req = new Request('http://localhost:3000', {
+  const req = new Request('http://52.43.21.187:3000', {
     method: 'POST',
     body: JSON.stringify(shotData)
   });
