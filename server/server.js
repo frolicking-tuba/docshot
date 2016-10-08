@@ -27,14 +27,12 @@ done.onPop((result) => {
     });
 });
 
-const handleReq = (req, res) => {
+const handlePost = (req, res) => {
   let data = '';
 
   req.on('data', (part) => (data += part));
   req.on('end', () => {
-    const job = new Job(
-      data,
-      curId);
+    const job = new Job(data, curId);
 
     openRes[curId] = res;
 
@@ -42,6 +40,19 @@ const handleReq = (req, res) => {
 
     pending.push(job.serialize());
   });
+};
+
+const handleOptions = (req, res) => {
+  res.writeHead(200, { 'Access-Control-Allow-Origin': '*' });
+  res.end();
+};
+
+const handleReq = (req, res) => {
+  if (req.method === 'OPTIONS') {
+    handleOptions(req, res);
+  } else if (req.method === 'POST') {
+    handlePost(req, res);
+  }
 };
 
 const server = http.createServer(handleReq);
