@@ -28,6 +28,7 @@ done.onPop((result) => {
 });
 
 const handlePost = (req, res) => {
+  res.writeHead(200, { 'Access-Control-Allow-Origin': '*' });
   let data = '';
 
   req.on('data', (part) => (data += part));
