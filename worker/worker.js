@@ -77,6 +77,17 @@ class JobRunner {
           height: this.job.clipHeight
         });
       })
+      .then(() => {
+        console.log(
+          '(worker): scrolling page to',
+          this.job.scrollX,
+          this.job.scrollY);
+
+        return phantomPage.property('scrollPosition', {
+          left: this.job.scrollX,
+          top: this.job.scrollY
+        });
+      })
       .then(() =>
         phantomPage.setting('userAgent', this.job.userAgent))
       .then(() => {
@@ -84,7 +95,7 @@ class JobRunner {
 
         return phantomPage.open(this.job.url);
       })
-      .then(() =>  {
+      .then(() => {
         console.log('(worker): setting innerHTML in phantom');
 
         return phantomPage.evaluate(function(html){
