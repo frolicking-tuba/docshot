@@ -16,11 +16,8 @@ const props = {
 
 class Job {
   constructor(first, id) {
-    if (id) {
-      this.id = id;
-    }
-
     this.deserialize(first);
+    this.id = id;
   }
 
   serialize() {

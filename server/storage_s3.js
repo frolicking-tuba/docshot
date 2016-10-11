@@ -19,7 +19,6 @@ module.exports.send = (job) =>
       if (err) {
         console.log('err', err);
       } else {
-        console.log('successn', res);
         resolve(res.Location);
       }
     });
