@@ -17,7 +17,7 @@ done.onPop((result) => {
 
   Reflect.deleteProperty(openRes, job.id);
 
-  console.log('(server): storing data... b64 size: ', openRes.length);
+  console.log('(server): storing data');
 
   storage.send(job)
     .then((accessor) => {

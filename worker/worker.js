@@ -6,6 +6,8 @@ const phantom = require('phantom');
 const request = require('request');
 const urlParse = require('url').parse;
 
+const delayBeforeRender = 300;
+
 class JobRunner {
   constructor(job) {
     this.job = job;
@@ -29,17 +31,17 @@ class JobRunner {
     console.log('(worker): launching phantomjs');
 
     phantom.create([
-        '--ignore-ssl-errors=yes',
-        '--web-security=false'
-      ])
-      .then((phantomInstance) => {
-        console.log('(worker): phantom is ready to go!');
-        this.phantom = phantomInstance;
-        this.loadPage();
-      })
-      .catch((err) => {
-        console.log('(worker): error launching phantom', err);
-      });
+      '--ignore-ssl-errors=yes',
+      '--web-security=false'
+    ])
+    .then((phantomInstance) => {
+      console.log('(worker): phantom is ready to go!');
+      this.phantom = phantomInstance;
+      this.loadPage();
+    })
+    .catch((err) => {
+      console.log('(worker): error launching phantom', err);
+    });
   }
 
   loadPage() {
@@ -61,8 +63,7 @@ class JobRunner {
           height: this.job.browserHeight
         });
       })
-      .then((status) => {
-        console.log('(worker): opened page', status);
+      .then(() => {
         console.log(
           '(worker): adjusting viewport clipping to',
           this.job.clipX,
@@ -75,17 +76,6 @@ class JobRunner {
           top: this.job.clipY,
           width: this.job.clipWidth,
           height: this.job.clipHeight
-        });
-      })
-      .then(() => {
-        console.log(
-          '(worker): scrolling page to',
-          this.job.scrollX,
-          this.job.scrollY);
-
-        return phantomPage.property('scrollPosition', {
-          left: this.job.scrollX,
-          top: this.job.scrollY
         });
       })
       .then(() =>
@@ -102,6 +92,20 @@ class JobRunner {
           document.documentElement.innerHTML = html;
         }, this.job.html);
       })
+      .then(() => {
+        console.log(
+          '(worker): scrolling page to',
+          this.job.scrollX,
+          this.job.scrollY);
+
+        return phantomPage.property('scrollPosition', {
+          left: this.job.scrollX,
+          top: this.job.scrollY
+        });
+      })
+      .then(() => new Promise((resolve) => {
+        setTimeout(resolve, delayBeforeRender);
+      }))
       .then(() => {
         console.log('(worker): rendering to baset64 PNG');
 
@@ -124,7 +128,8 @@ class JobRunner {
   getResourceUrl(sourceUrl) {
     if (sourceUrl[0] === '/') {
       const parsedJob = urlParse(this.job.url);
-      return `${parsedJob.protocol}//${parsedJob.hostname}${sourceUrl}`
+
+      return `${parsedJob.protocol}//${parsedJob.hostname}${sourceUrl}`;
     }
 
     return this.job.url + sourceUrl;
@@ -137,7 +142,7 @@ class JobRunner {
 
       return;
     }
-    
+
     const toUrl = this.getResourceUrl(req.url);
 
     console.log('(worker): proxying url', req.url, '->', toUrl);
