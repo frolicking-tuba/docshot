@@ -30,9 +30,8 @@ url to the image in plain text.
 Example:
 
 ```
-GET /
+POST /
 ```
-
 ```javascript
 {
   html: '<html><head><titl...',
